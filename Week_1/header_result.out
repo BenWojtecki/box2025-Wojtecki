@@ -1,0 +1,50 @@
+BLASTN 2.12.0+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: Nucleotide collection (nt)
+           104,217,277 sequences; 1,600,695,373,582 total letters
+
+
+
+Query= gi|907305548|emb|CNST02000001.1| Secret genome assembly 6999_3#3,
+scaffold 1334_contig_100, whole genome shotgun sequence
+
+Length=205
+
+RID: BJPMNN0D014
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+CP185285.1 Streptococcus pneumoniae strain 5141 chromosome, compl...  374     1e-98
+AP018937.1 Streptococcus pneumoniae HU-OH DNA, complete genome        374     1e-98
+LS483450.1 Streptococcus pneumoniae strain 4041STDY6583227 genome...  374     1e-98
+AP018043.1 Streptococcus pneumoniae DNA, nearly complete genome, ...  374     1e-98
+CP137114.1 Streptococcus pneumoniae strain 15P3054 chromosome, co...  374     1e-98
+CP137111.1 Streptococcus pneumoniae strain 17023 chromosome, comp...  374     1e-98
+CP137100.1 Streptococcus pneumoniae strain LYP chromosome, comple...  374     1e-98
+CP126249.1 Streptococcus pneumoniae strain 27_Kz chromosome           374     1e-98
+CP090888.1 Streptococcus pneumoniae strain PT8465 chromosome, com...  374     1e-98
+CP090887.1 Streptococcus pneumoniae strain NP7536 chromosome, com...  374     1e-98
+CP090886.1 Streptococcus pneumoniae strain NP7513 chromosome, com...  374     1e-98
+CP090885.1 Streptococcus pneumoniae strain ND6401 chromosome, com...  374     1e-98
+CP035261.1 Streptococcus pneumoniae strain TVO_1901924 chromosome...  374     1e-98
+FQ312045.1 Streptococcus pneumoniae SPN034156 draft genome            374     1e-98
+LR216039.1 Streptococcus pneumoniae strain 2245STDY5775610 genome...  368     5e-97
+CP031247.1 Streptococcus pneumoniae strain M23734 chromosome, com...  368     5e-97
+CP139860.1 Streptococcus pneumoniae strain 21011 chromosome, comp...  368     5e-97
+AP026914.1 Streptococcus pneumoniae PZ900700003 DNA, complete genome  368     5e-97
+LN831051.1 Streptococcus pneumoniae genome assembly NCTC7465, chr...  368     5e-97
+CP090882.1 Streptococcus pneumoniae strain CH2241 chromosome, com...  368     5e-97
+CP071871.1 Streptococcus pneumoniae strain BVJ1JL chromosome, com...  368     5e-97
+CP001845.1 Streptococcus pneumoniae gamPNI0373, complete genome       368     5e-97
+CP000920.1 Streptococcus pneumoniae P1031, complete genome            368     5e-97
+CP050175.1 Streptococcus pneumoniae strain PZ900701590 chromosome...  363     2e-95
+AP031340.1 Streptococcus pneumoniae Sp575 DNA, complete genome        363     2e-95
+AP031337.1 Streptococcus pneumoniae Sp376 DNA, complete genome        363     2e-95
+AP031336.1 Streptococcus pneumoniae Sp373 DNA, complete genome        363     2e-95

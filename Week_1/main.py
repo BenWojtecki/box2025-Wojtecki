@@ -5,6 +5,9 @@ import random
 #QUESTION 2:
 # The species is Streptococcus pneumoniae strain 5141
 
+#QUESTION 6:
+# The real genome and the random genome have many different k-mers, but the real genome has more repeats, while the Fibonacci sequence is very simple and makes only a small number of k-mers
+
 def read_file(file):
     seq = []
     with open(file, "r") as f:

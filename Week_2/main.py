@@ -106,18 +106,10 @@ def main():
             file1, file2 = files[i], files[j]
             ji = jaccard_index(kmers_file[file1], kmers_file[file2])
             print(f"Jaccard index between {file1} and {file2}: {ji:.3f}")
-
-
+            
 #File4 and File6 have a jaccard index near to 1, like File2 and File5. We can say that the sequences in theses files correspond to almost the same genome. 
 #This suggest that these theses genomes come from the same species or strain  
     plot_kmer_histogram("Files/file1.fa", 20)
-
-
-                    
-
-
-
-    
 
 if __name__ == "__main__":
     main()

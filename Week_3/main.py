@@ -192,32 +192,32 @@ def create_unitigs(kmers, edges, k):
 def main():
 
     print("=============Question 3=============")
-    #create_dbg("ecoli_genome_150k.fa", 31, 1)
+    create_dbg("ecoli_genome_150k.fa", 31, 1)
     #For k = 31 and t = 1, we have k-mers stored 153563 also there is 153469 nodes in the graph and 92796 edges
     print("=============Question 4=============\n")
 
     print("=============Perfect reads, forward strand only=============")
-    #create_dbg("ecoli_genome_150k.fa", 31, 1)
+    create_dbg("ecoli_genome_150k.fa", 31, 1)
     #For k = 31 and t = 1, we have k-mers stored 153563 also there is 153469 nodes in the graph and 92796 edges
 
     print("=============Perfect reads, both forward/reverse strands=============")
-    #create_dbg("reads-20250930T134338Z-1-001/reads/ecoli_sample_perfect_reads_forward.fasta.gz", 31, 1)
+    create_dbg("reads-20250930T134338Z-1-001/reads/ecoli_sample_perfect_reads_forward.fasta.gz", 31, 1)
     #For k = 31 and t = 1, we have k-mers stored 2100000, also there is 149869 nodes in the graph and 90618 edges
 
     print("=============0.1% error, both strands=============")
-    #create_dbg("reads-20250930T134338Z-1-001/reads/ecoli_sample_perfect_reads.fasta.gz", 31, 1)
+    create_dbg("reads-20250930T134338Z-1-001/reads/ecoli_sample_perfect_reads.fasta.gz", 31, 1)
     #For k = 31 and t = 1, we have k-mers stored 2100000, also there is 149869 nodes in the graph and 90621 edges
 
     print("=============1% error, only both strands=============")
-    #create_dbg("reads-20250930T134338Z-1-001/reads/ecoli_sample_reads_01.fasta.gz", 31, 1)
+    create_dbg("reads-20250930T134338Z-1-001/reads/ecoli_sample_reads_01.fasta.gz", 31, 1)
     #For k = 31 and t = 1, we have k-mers stored 2100000, also there is 213031 nodes in the graph and 129297 edges
 
     print("============= Question 5 =============")
     print("Histogramme de fréquences pour différents seuils d’abondance t")
-    #histogram_frequency("reads-20250930T134338Z-1-001/reads/ecoli_sample_perfect_reads.fasta.gz", 31)
+    histogram_frequency("reads-20250930T134338Z-1-001/reads/ecoli_sample_perfect_reads.fasta.gz", 31)
     #optimal t is aroung 20 for reads with 0.1% error, both strands
 
-    #histogram_frequency("reads-20250930T134338Z-1-001/reads/ecoli_sample_reads_01.fasta.gz", 31)
+    histogram_frequency("reads-20250930T134338Z-1-001/reads/ecoli_sample_reads_01.fasta.gz", 31)
     #optimal t is aroung 5 for reads with 0.1% error, only both strands
 
     print("============= Question 7=============")

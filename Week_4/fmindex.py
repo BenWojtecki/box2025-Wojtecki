@@ -23,6 +23,7 @@ class FMindex:
     def __init__(self, seq, verbose=False):
         self.seq = seq
         self.verbose = verbose
+
         self.sa = None
         self.bwt = None 
         self.fm_count = None
@@ -32,10 +33,15 @@ class FMindex:
 
         self.__compute_sa(seq)
         self.__compute_bwt_from_sa(seq)
+        self.__build_fm_index()
 
         if self.verbose:
             print("Suffix array :", self.sa)
             print("BWT          :", self.bwt)
+            print("FM count     :", self.fm_count)
+            print("FM rank (partial):")
+            for k in self.fm_rank:
+                print(f"   {k}: {self.fm_rank[k][:10]}")
 
 
 
@@ -134,10 +140,63 @@ class FMindex:
             print("MTF Compressed BWT:", output)
         return output
 
-    # >>===[ Pattern matching functions ]=======================================
+    # >>===[ Question 2.1 functions ]=======================================
 
+    def __build_fm_index(self):
+        if self.bwt is None:
+            raise ValueError("BWT has not been computed yet.")
+        
+        #Compter les fréquences totales de chaque caractère
+        total_counts = {}
+        for char in self.bwt:
+            if char in total_counts:
+                total_counts[char] += 1
+            else:
+                total_counts[char] = 1
+            
+        #Calculer nombre total de caractères plus petits que c
+        sorted_chars = sorted(total_counts.keys())
+        self.fm_count = {}
+        cumulative_count = 0
+        for char in sorted_chars:
+            self.fm_count[char] = cumulative_count
+            cumulative_count += total_counts[char]
 
+        #Construire la table des rangs
+        self.fm_rank = {}
+        for ch in sorted_chars:
+            self.fm_rank[ch] = [0] * (len(self.bwt) + 1)
 
+        for i in range(1, len(self.bwt) + 1):
+            char = self.bwt[i - 1]
+            for ch in sorted_chars:
+                self.fm_rank[ch][i] = self.fm_rank[ch][i - 1]
+            self.fm_rank[char][i] += 1
+    
+        self.fm_ranks = self.fm_rank
+
+    # >>===[ Question 2.2 functions ]===========================================
+
+    def get_string(self):
+        if self.bwt is None:
+            raise ValueError("BWT non calculée.")
+        if self.fm_count is None or self.fm_rank is None:
+            raise ValueError("FM-index non initialisé.")
+        
+        n = len(self.bwt)
+        result = [""] * n
+        idx = 0
+        for i in range(n):
+            if self.bwt[i] == '$':
+                idx = i
+                break
+
+        for i in range(n - 1, -1, -1):
+            c = self.bwt[idx]
+            result[i] = c
+            idx = self.fm_count[c] + self.fm_ranks[c][idx]
+        
+        return ''.join(result).rstrip('$')
 
 # >>===[ Function main ]===========================================
 if __name__ == "__main__":
@@ -148,3 +207,4 @@ if __name__ == "__main__":
     print("\nRLE Encodé :", rle_encoded)
     print("RLE Décodé :", rle_decoded)
     print("\nMTF Encodé :", fm.compress_mtf_bwt())
+    print("\nInversion rapide (LF-mapping):", fm.get_string())

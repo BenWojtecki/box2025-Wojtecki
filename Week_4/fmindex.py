@@ -66,7 +66,7 @@ class FMindex:
 
     def compress_rle_bwt(self):
         if self.bwt is None:
-            raise ValueError("BWT has not been computed yet.")
+            raise ValueError("BWT non calculé.")
         text = self.bwt
 
         if len(text) == 0:
@@ -115,7 +115,7 @@ class FMindex:
     def compress_mtf_bwt(self, text=None):
         if text is None:
             if self.bwt is None:
-                raise ValueError("BWT has not been computed yet.")
+                raise ValueError("BWT non calculé.")
             text = self.bwt 
      
         alphabet = sorted(set(text))
@@ -144,7 +144,7 @@ class FMindex:
 
     def __build_fm_index(self):
         if self.bwt is None:
-            raise ValueError("BWT has not been computed yet.")
+            raise ValueError("BWT non calculée.")
         
         #Compter les fréquences totales de chaque caractère
         total_counts = {}
@@ -154,7 +154,7 @@ class FMindex:
             else:
                 total_counts[char] = 1
             
-        #Calculer nombre total de caractères plus petits que c
+        #Calculer fm_count
         sorted_chars = sorted(total_counts.keys())
         self.fm_count = {}
         cumulative_count = 0
@@ -174,6 +174,15 @@ class FMindex:
             self.fm_rank[char][i] += 1
     
         self.fm_ranks = self.fm_rank
+
+        #Construire next_smallest_letter
+        self.next_smallest_letter = {}
+        prev = None
+
+        for ch in sorted_chars:
+            self.next_smallest_letter[ch] = prev
+            prev = ch
+
 
     # >>===[ Question 2.2 functions ]===========================================
 
@@ -197,14 +206,114 @@ class FMindex:
             idx = self.fm_count[c] + self.fm_ranks[c][idx]
         
         return ''.join(result).rstrip('$')
+    
+
+
+    # >>>>===[ Question 2.3 functions ]===========================================
+
+    def __backward_search(self, pattern):
+        l = 0
+        r = len(self.bwt)
+        for i in range(len(pattern) - 1, -1, -1):
+            c = pattern[i]
+            if c not in self.fm_count:
+                return (0, 0)
+            l = self.fm_count[c] + self.fm_rank[c][l]
+            r = self.fm_count[c] + self.fm_rank[c][r]
+            if l >= r:
+                return (0, 0)
+        return (l, r)
+
+    def membership(self, pattern):
+        l, r = self.__backward_search(pattern)
+        return l < r
+
+    def count(self, pattern):
+        l, r = self.__backward_search(pattern)
+        return r - l
+
+    def locate(self, pattern):
+        l, r = self.__backward_search(pattern)
+        positions = []
+        for i in range(l, r):
+            positions.append(self.sa[i])
+        positions.sort()
+        return positions
+    
+
+    # == 2.5 : Approximate pattern matching (≤ e erreurs) ==
+    def __approx_search_recursive(self, pattern, i, l, r, e, results):
+        if e < 0:
+            return
+
+        if i < 0:
+            if l < r:
+                results.append((l, r))
+            return
+
+        current_char = pattern[i]
+
+        # Cas même caractère
+        if current_char in self.fm_count:
+            new_l = self.fm_count[current_char] + self.fm_rank[current_char][l]
+            new_r = self.fm_count[current_char] + self.fm_rank[current_char][r]
+            if new_l < new_r:
+                self.__approx_search_recursive(pattern, i - 1, new_l, new_r, e, results)
+
+        # Cas erreur =>(substitution)
+        if e > 0:
+            for alt in self.fm_count.keys():
+                if alt == current_char:
+                    continue
+                alt_l = self.fm_count[alt] + self.fm_rank[alt][l]
+                alt_r = self.fm_count[alt] + self.fm_rank[alt][r]
+                if alt_l < alt_r:
+                    self.__approx_search_recursive(pattern, i - 1, alt_l, alt_r, e - 1, results)
+
+    def locate_approx(self, pattern, e=1):
+        results = []
+        self.__approx_search_recursive(pattern, len(pattern) - 1, 0, len(self.bwt), e, results)
+
+        positions = []
+        for (l, r) in results:
+            for i in range(l, r):
+                positions.append(self.sa[i])
+
+        unique_positions = []
+        for p in sorted(set(positions)):
+            unique_positions.append(p)
+        return unique_positions
 
 # >>===[ Function main ]===========================================
 if __name__ == "__main__":
+
     fm = FMindex("banana", verbose=True)
+
+    print("\n" + "=" * 10 + "Reconstruction du string" + "=" * 10 + "\n")
     print("Reconstructed string (naive):", fm.get_string__naive())
-    rle_encoded = fm.compress_rle_bwt()
-    rle_decoded = fm.decompress_rle_bwt(rle_encoded)
-    print("\nRLE Encodé :", rle_encoded)
-    print("RLE Décodé :", rle_decoded)
+    print("Reconstruction string (rapide):", fm.get_string())
+
+    print("\n" + "=" * 10 + "Compression de la BWT" + "=" * 10 + "\n")
+
+    encoded = fm.compress_rle_bwt()
+    decoded = fm.decompress_rle_bwt(encoded)
+
+    print(f"RLE encodé : : {encoded}")
+    print(f"\nRLE décodé :  {decoded}")
     print("\nMTF Encodé :", fm.compress_mtf_bwt())
-    print("\nInversion rapide (LF-mapping):", fm.get_string())
+    
+    print("\n" + "=" * 10 + "Recherche de motifs exact" + "=" * 10 + "\n")
+
+    motifs = ["ana", "na", "ban", "a$", "z"]
+    for m in motifs:
+        print(f" Motif '{m}':")
+        print(" - Présent :  ", fm.membership(m))
+        print(" - Nb occur :  ", fm.count(m))
+        print(" - Positions : ", fm.locate(m))
+
+    print("\n" + "=" * 10 + "Recherche de motifs exact" + "=" * 10 + "\n")
+
+    motifs = ["ana", "ann", "ban", "bana", "nana"]
+    for m in motifs:
+        print(f"Motif '{m}' (error e=1):")
+        print(" - Position approx :", fm.locate_approx(m, e=1))

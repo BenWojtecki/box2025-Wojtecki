@@ -28,4 +28,5 @@ addElement("GoodBye")
 
 print(containsElement("Hello"))
 print(containsElement("GoodBye"))
+print(containsElement("Hi"))
 print(containsElement("bonjour"))
